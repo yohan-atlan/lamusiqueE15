@@ -18,5 +18,8 @@
   "homepage": "https://github.com/yohan-atlan/lamusiqueE15#readme",
   "dependencies": {
     "tesseract.js": "^1.0.10"
+  },
+  "devDependencies": {
+    "gulp-install": "^0.6.0"
   }
 }
