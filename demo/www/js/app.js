@@ -18,6 +18,19 @@ angular.module('starter', ['ionic','ngCordova'])
   });
 })
 
+.config(function($stateProvider, $urlRouterProvider){
+  $stateProvider.state('home',{
+      url: '/home',
+      templateUrl:'templates/home.html'
+  })
+  $stateProvider.state('about',{
+      url: '/about',
+      templateUrl:'templates/about.html'
+  })
+
+  $urlRouterProvider.otherwise('/home')
+})
+
 .controller('CaptureCtrl', function($scope, $ionicActionSheet, $ionicLoading, $ionicPlatform, $cordovaCamera) {
 
   $ionicPlatform.ready(function() {
@@ -56,7 +69,7 @@ angular.module('starter', ['ionic','ngCordova'])
         // $scope.showAnalyzeButton = true;
         $scope.testOcrad();
       }, function(err) {
-          console.log(err);
+          alert(err);
       });
 
     };
@@ -89,6 +102,18 @@ angular.module('starter', ['ionic','ngCordova'])
       console.log(text);
       alert(text);
     });
+    // var AYLIENTextAPI = require('aylien_textapi');
+    // var textapi = new AYLIENTextAPI({
+    //   application_id: "be2e9ebf",
+    //   application_key: "6628469270bf2deeaa532b9e718e001f"
+    // });
+    // textapi.sentiment({
+    //   'text': 'John is a very good football player!'
+    // }, function(error, response) {
+    //   if (error === null) {
+    //     alert(response);
+    //   }
+    // });
   } ;
 
 });
