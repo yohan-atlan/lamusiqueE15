@@ -1,0 +1,25 @@
+<ion-view view-title='sons'>
+  <ion-content ng-controller="AudioController" class="padding">
+    <h1>Sons</h1>
+    <div class="list card" ng-repeat="audio in audioTracks">
+
+    <div class="item item-avatar">
+      <i class="ion-music-note"></i>
+      <h2>{{audio.title}}</h2>
+      <p>{{audio.genre}}</p>
+    </div>
+
+    <div class="item tabs tabs-secondary tabs-icon-left">
+      <a class="tab-item" href="#" ng-click="playTrack(audio.track, audio.key)">
+        <i class="icon ion-ios-play"></i>
+        Play
+      </a>
+      <a class="tab-item" href="#" ng-click="stopTrack(audio.key)">
+        <i class="icon ion-android-checkbox-blank"></i>
+        Stop
+      </a>
+    </div>
+
+  </div>
+  </ion-content>
+</ion-view>
