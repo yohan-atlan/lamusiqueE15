@@ -1,10 +1,17 @@
 <ion-view view-title='home'>
   <ion-content ng-controller="CaptureCtrl">
-    <button ng-click="showActionSheet()" class="home-button">
-      Pipp'it
-    </button>
-    <img style="width: 0%;" id="pic" src="" style="display: none;">
-    <a ui-sref='about'>About</a>
-    <a ui-sref='sons'>Sons</a>
+    <div class="home">
+      <img src="img/illu.svg" alt="" class="home__illustration">
+      <div class="home__paragraph">
+        <p class="home__paragraph_slogan">
+          scannez <br> choisissez <br> profitez
+        </p>
+        <p class="home__paragraph_title">
+          pipper
+        </p>
+      </div>
+      <button ng-click="showActionSheet()" class="home__button"></button>
+      <img style="width: 0%;" id="pic" src="" style="display: none;">
+    </div>
   </ion-content>
 </ion-view>

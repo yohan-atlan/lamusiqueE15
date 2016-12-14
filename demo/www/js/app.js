@@ -26,6 +26,10 @@ angular.module('starter', ['ionic','ngCordova'])
       url: '/about',
       templateUrl:'templates/about.html'
   })
+  $stateProvider.state('player',{
+      url: '/player',
+      templateUrl:'templates/player.html'
+  })
   $stateProvider.state('sons',{
       url: '/sons',
       templateUrl:'templates/sons.html'
@@ -121,59 +125,101 @@ angular.module('starter', ['ionic','ngCordova'])
 
 })
 
+
+// PLAYER
 .controller('AudioController', function($scope,$ionicPlatform, $ionicActionSheet, $ionicLoading) {
-  var audio = [{
-      id: 1,
-      key: 'Son triste',
-      title: "Tristoune",
-      track: 'audio/The_Master.mp3',
-      genre: "This will be card Description"
-    }, {
-      id: 2,
-      key: 'Son joyeux',
-      title: "Joyeux",
-      track: 'audio/Give.mp3',
-      genre: "Alternative & Punk | Bright"
-    }, {
-      id: 3,
-      key: 'Son colère',
-      title: "Colère",
-      track: 'audio/colere.mp3',
-      genre: ""
-    }, ];
+  var pause = true;
+  var loop  = false;
 
-    $scope.audioTracks = Array.prototype.slice.call(audio, 0);
-    // alert($scope.audioTracks);
+  var audio_player            = document.querySelector('.audio_player');
+  var audio_button_play       = document.querySelector('.audio_button_play');
+  var audio_button_previous   = document.querySelector('.audio_button_previous');
+  var audio_button_next       = document.querySelector('.audio_button_next');
+  var audio_button_loop       = document.querySelector('.audio_button_loop');
+  var audio_button_random     = document.querySelector('.audio_button_random');
+  var audio_seek_bar          = document.querySelector('.audio_seek_bar');
+  var audio_progress_bar      = document.querySelector('.audio_progress_bar');
 
-    $scope.player = {
-      key: '' // Holds a last active track
+  audio_player.src = 'audio/colere.mp3';
+
+  // PLAY / PAUSE
+    var if_playing = function(){
+    	if (pause == true) {
+        audio_button_play.src='img/pause.png';
+    		audio_player.play();
+    		pause = false;
+    	}
+    	else{
+        audio_button_play.src='img/play.png'
+    		audio_player.pause();
+    		pause = true;
+    	}
+    };
+    audio_button_play.addEventListener('click', function(){
+    	if_playing();
+    });
+
+    // SEEK BAR
+    window.setInterval(function(){
+    	var progress_ratio   = audio_player.currentTime / audio_player.duration;
+
+    	audio_progress_bar.style.transform = 'scaleX(' + progress_ratio +')';
+    	// document.querySelector('.progressTime').textContent = timePast(); /* TIME OF VIDEO*/
+
+    },50);
+
+    audio_seek_bar.addEventListener('click',function(e){
+    	var bounding_rect = audio_seek_bar.getBoundingClientRect(),
+    	    x             = e.clientX - bounding_rect.left,
+    	    ratio         = x / bounding_rect.width,
+    	    time          = ratio * audio_player.duration;
+
+    	audio_player.currentTime = time;
+    });
+
+    // TIME OF
+    function timePast(){
+    	var hours = Math.floor(audio_player.currentTime / 3600);
+    	var mins = Math.floor((audio_player.currentTime % 3600) / 60);
+    	var secs = Math.floor(audio_player.currentTime % 60);
+    	if (secs < 10) {
+            secs = "0" + secs;
+        }
+
+        if (hours) {
+            if (mins < 10) {
+                mins = "0" + mins;
+            }
+
+            return hours + ":" + mins + ":" + secs;
+        } else {
+            return mins + ":" + secs;
+        }
     }
 
-    $ionicPlatform.ready(function() {
+    // LOOP
+    var if_looping = function(){
+    	if (loop == true) {
+    		audio_player.loop = false;
+        audio_button_loop.classList.add("disable");
+        audio_button_loop.classList.remove("enable");
+    		loop = false;
+    	}
+    	else{
+        audio_player.loop = true;
+        audio_button_loop.classList.add("enable");
+        audio_button_loop.classList.remove("disable");
+    		loop = true;
+    	}
+    };
+    audio_button_loop.addEventListener('click', function(){
+    	if_looping();
+    });
 
-      $scope.playTrack = function(track, key) {
-        // Preload an audio track before we play it
-        window.plugins.NativeAudio.preloadComplex(key, track, 1, 1, 0, function(msg) {
-          // If this is not a first playback stop and unload previous audio track
-          if ($scope.player.key.length > 0) {
-            window.plugins.NativeAudio.stop($scope.player.key); // Stop audio track
-            window.plugins.NativeAudio.unload($scope.player.key); // Unload audio track
-          }
-
-          window.plugins.NativeAudio.play(key); // Play audio track
-          $scope.player.key = key; // Set a current audio track so we can close it if needed
-        }, function(msg) {
-          alert('error: ' + msg); // Loading error
-        });
-      };
-
-      $scope.stopTrack = function() {
-          // If this is not a first playback stop and unload previous audio track
-          if ($scope.player.key.length > 0) {
-            window.plugins.NativeAudio.stop($scope.player.key); // Stop audio track
-            window.plugins.NativeAudio.unload($scope.player.key); // Unload audio track
-            $scope.player.key = ''; // Remove a current track on unload, it will break an app if we try to unload it again in playTrack function
-          }
-      };
+    // RELOAD
+    audio_button_previous.addEventListener('click', function(){
+      audio_player.currentTime = 0;
+    	pause = true;
+    	if_playing();
     });
 });
