@@ -1,10 +1,20 @@
 <ion-view view-title='player'>
-  <ion-content ng-controller="AudioController" class="padding">
-    <h1>Player</h1>
+  <ion-content ng-controller="AudioController" class="padding" scroll="false">
 			<audio class="audio_player">
         <source src="" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
+      <div class="audio_infos">
+        <div class="audio_img">
+          <!-- <img src="" alt=""> -->
+        </div>
+        <div class="audio_info_title">
+            <h1>Titre</h1>
+        </div>
+        <div class="audio_info_author">
+            <h1>Auteur</h1>
+        </div>
+      </div>
       <div class="audio_controllers">
         <div class="audio_seek_bar">
           <div class="audio_progress_bar"></div>
@@ -15,7 +25,7 @@
           <img src="img/play.png" alt="" class="audio_button_play">
           <img src="img/next.png" alt="" class="audio_button_next">
           <img src="img/repeat.png" alt="" class="audio_button_loop disable">
-        </div>        
+        </div>
       </div>
       <!-- <span class="progressTime"></span>
       <span class="totalTime"></span> -->
