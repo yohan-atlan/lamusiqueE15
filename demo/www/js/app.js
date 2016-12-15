@@ -113,10 +113,11 @@ angular.module('starter', ['ionic','ngCordova'])
       alert(text)
       $http({
         method: 'GET',
-        url: 'http://5b5d0717.ngrok.io/analyze?text='+text
+        // url: 'http://5b5d0717.ngrok.io/analyze?text='+text
+        url: 'http://bed9b320.ngrok.io/analyze?text='+text
       }).then(function successCallback(response) {
         // alert(response.data.tone);
-        // self.showLoading();
+        self.showLoading();
         var tone = response.data.tone;
         $state.go('player', {tone: tone});
       })
@@ -127,9 +128,14 @@ angular.module('starter', ['ionic','ngCordova'])
 
 // PLAYER
 .controller('AudioController', function($scope, $ionicPlatform, $ionicActionSheet, $ionicLoading, $state, $stateParams) {
+  this.hideLoading = function(){
+    $ionicLoading.hide();
+  };
+  hideLoading();
   // $stateParams.text;
   alert($stateParams.tone);
   var texte = $stateParams.mireille;
+  var emotion = $stateParams.tone;
   // alert(texte);
   var pause = false;
   var loop  = false;
@@ -145,10 +151,44 @@ angular.module('starter', ['ionic','ngCordova'])
   var audio_info_title        = document.querySelector('.audio_info_title_h1');
   var audio_info_author       = document.querySelector('.audio_info_author_h1');
 
-  var songs = {"songs":[
-    {"title":"Colère 1", "autor":"", "src":"audio/colere.mp3"},
-    {"title":"Colère 2", "autor":"", "src":"audio/colere2.mp3"},
-  ]};
+  if (emotion == 'joy') {
+    var songs = {"songs":[
+      {"title":"Smile Quiet Looking Up", "autor":"", "src":"audio/joie1.mp3"},
+    ]};
+  }
+  else if (emotion == 'sadness') {
+    var songs = {"songs":[
+      {"title":"Greta Sting", "autor":"", "src":"audio/tristesse1.mp3"},
+      {"title":"Disconcerned", "autor":"", "src":"audio/tristesse2.mp3"},
+    ]};
+  }
+  else if (emotion == 'fear') {
+    var songs = {"songs":[
+      {"title":"Long Note One", "autor":"", "src":"audio/peur.mp3"}
+    ]};
+  }
+  else if (emotion == 'disgust') {
+    var songs = {"songs":[
+      {"title":"Long Note One", "autor":"", "src":"audio/peur.mp3"},
+      {"title":"Restless Natives", "autor":"", "src":"audio/colere.mp3"}
+    ]};
+  }
+  else if (emotion == 'anger') {
+    var songs = {"songs":[
+      {"title":"Restless Natives", "autor":"", "src":"audio/colere.mp3"},
+      {"title":"Disconcerned", "autor":"", "src":"audio/tristesse2.mp3"}
+    ]};
+  }
+  else if (emotion == '') {
+    var songs = {"songs":[
+      {"title":"Restless Natives", "autor":"", "src":"audio/colere.mp3"},
+      {"title":"Long Note One", "autor":"", "src":"audio/peur.mp3"}
+    ]};
+  }
+  // var songs = {"songs":[
+  //   {"title":"Colère 1", "autor":"", "src":"audio/colere.mp3"},
+  //   {"title":"Colère 2", "autor":"", "src":"audio/colere2.mp3"},
+  // ]};
   console.log(songs);
   audio_player.src = songs.songs[0].src;
   audio_info_title.innerText = songs.songs[0].title;
