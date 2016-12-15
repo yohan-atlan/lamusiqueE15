@@ -28,7 +28,7 @@ angular.module('starter', ['ionic','ngCordova'])
       templateUrl:'templates/about.html'
   })
   $stateProvider.state('player',{
-      url: '/player:text',
+      url: '/player:tone',
       templateUrl:'templates/player.html',
       controller: 'AudioController'
   })
@@ -40,7 +40,7 @@ angular.module('starter', ['ionic','ngCordova'])
   $urlRouterProvider.otherwise('/home')
 })
 
-.controller('CaptureCtrl', function($scope, $ionicActionSheet, $ionicLoading, $ionicPlatform, $cordovaCamera, $state) {
+.controller('CaptureCtrl', function($scope, $ionicActionSheet, $ionicLoading, $ionicPlatform, $cordovaCamera, $state, $http) {
 
   $ionicPlatform.ready(function() {
 
@@ -88,10 +88,10 @@ angular.module('starter', ['ionic','ngCordova'])
   $scope.showActionSheet = function(){
     var hideSheet = $ionicActionSheet.show({
       buttons: [
-       { text: 'Choose Photo' },
-       { text: 'Take Photo' }
+       { text: 'Choisir une photo' },
+       { text: 'Prendre une photo' }
       ],
-      cancelText: 'Cancel',
+      cancelText: 'Annuler',
       cancel: function() {
         console.log('cancel');
       },
@@ -110,21 +110,17 @@ angular.module('starter', ['ionic','ngCordova'])
     OCRAD(document.getElementById("pic"), function(value){
       self.hideLoading();
       text = value;
-      alert(text);
-      $state.go('player', {text: text});
+      alert(text)
+      $http({
+        method: 'GET',
+        url: 'http://5b5d0717.ngrok.io/analyze?text='+text
+      }).then(function successCallback(response) {
+        // alert(response.data.tone);
+        // self.showLoading();
+        var tone = response.data.tone;
+        $state.go('player', {tone: tone});
+      })
     });
-    // var AYLIENTextAPI = require('aylien_textapi');
-    // var textapi = new AYLIENTextAPI({
-    //   application_id: "be2e9ebf",
-    //   application_key: "6628469270bf2deeaa532b9e718e001f"
-    // });
-    // textapi.sentiment({
-    //   'text': 'John is a very good football player!'
-    // }, function(error, response) {
-    //   if (error === null) {
-    //     alert(response);
-    //   }
-    // });
   };
 })
 
@@ -132,7 +128,7 @@ angular.module('starter', ['ionic','ngCordova'])
 // PLAYER
 .controller('AudioController', function($scope, $ionicPlatform, $ionicActionSheet, $ionicLoading, $state, $stateParams) {
   // $stateParams.text;
-  alert($stateParams.text);
+  alert($stateParams.tone);
   var texte = $stateParams.mireille;
   // alert(texte);
   var pause = false;
