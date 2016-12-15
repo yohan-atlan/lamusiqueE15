@@ -23,20 +23,11 @@ angular.module('starter', ['ionic','ngCordova'])
       templateUrl:'templates/home.html',
       controller: 'CaptureCtrl'
   })
-  $stateProvider.state('about',{
-      url: '/about',
-      templateUrl:'templates/about.html'
-  })
   $stateProvider.state('player',{
       url: '/player:tone',
       templateUrl:'templates/player.html',
       controller: 'AudioController'
   })
-  $stateProvider.state('sons',{
-      url: '/sons',
-      templateUrl:'templates/sons.html'
-  })
-
   $urlRouterProvider.otherwise('/home')
 })
 
@@ -78,7 +69,7 @@ angular.module('starter', ['ionic','ngCordova'])
         // $scope.showAnalyzeButton = true;
         $scope.testOcrad();
       }, function(err) {
-          alert(err);
+          // alert(err);
       });
 
     };
@@ -108,16 +99,16 @@ angular.module('starter', ['ionic','ngCordova'])
     var text;
     self.showLoading();
     OCRAD(document.getElementById("pic"), function(value){
-      self.hideLoading();
+      // self.hideLoading();
       text = value;
-      alert(text)
+      // alert(text)
       $http({
         method: 'GET',
         // url: 'http://5b5d0717.ngrok.io/analyze?text='+text
         url: 'http://bed9b320.ngrok.io/analyze?text='+text
       }).then(function successCallback(response) {
         // alert(response.data.tone);
-        self.showLoading();
+        // self.showLoading();
         var tone = response.data.tone;
         $state.go('player', {tone: tone});
       })
@@ -133,7 +124,7 @@ angular.module('starter', ['ionic','ngCordova'])
   };
   hideLoading();
   // $stateParams.text;
-  alert($stateParams.tone);
+  // alert($stateParams.tone);
   var texte = $stateParams.mireille;
   var emotion = $stateParams.tone;
   // alert(texte);
