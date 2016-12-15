@@ -28,7 +28,7 @@ angular.module('starter', ['ionic','ngCordova'])
       templateUrl:'templates/about.html'
   })
   $stateProvider.state('player',{
-      url: '/player',
+      url: '/player:text',
       templateUrl:'templates/player.html',
       controller: 'AudioController'
   })
@@ -111,9 +111,8 @@ angular.module('starter', ['ionic','ngCordova'])
       self.hideLoading();
       text = value;
     });
-    alert(text);
-    // var mireille = 2;
-    $state.go('player', {mireille: 2});
+    // alert(text);
+    $state.go('player', {text: text});
     // var AYLIENTextAPI = require('aylien_textapi');
     // var textapi = new AYLIENTextAPI({
     //   application_id: "be2e9ebf",
@@ -132,6 +131,8 @@ angular.module('starter', ['ionic','ngCordova'])
 
 // PLAYER
 .controller('AudioController', function($scope, $ionicPlatform, $ionicActionSheet, $ionicLoading, $state, $stateParams) {
+  // $stateParams.text;
+  alert($stateParams.text);
   var texte = $stateParams.mireille;
   // alert(texte);
   var pause = false;
@@ -147,7 +148,7 @@ angular.module('starter', ['ionic','ngCordova'])
   var audio_progress_bar      = document.querySelector('.audio_progress_bar');
   var audio_info_title        = document.querySelector('.audio_info_title_h1');
   var audio_info_author       = document.querySelector('.audio_info_author_h1');
-
+  
   var songs = {"songs":[
     {"title":"Colère 1", "autor":"", "src":"audio/colere.mp3"},
     {"title":"Colère 2", "autor":"", "src":"audio/colere2.mp3"},
