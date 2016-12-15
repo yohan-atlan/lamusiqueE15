@@ -20,7 +20,8 @@ angular.module('starter', ['ionic','ngCordova'])
 .config(function($stateProvider, $urlRouterProvider){
   $stateProvider.state('home',{
       url: '/home',
-      templateUrl:'templates/home.html'
+      templateUrl:'templates/home.html',
+      controller: 'CaptureCtrl'
   })
   $stateProvider.state('about',{
       url: '/about',
@@ -28,7 +29,8 @@ angular.module('starter', ['ionic','ngCordova'])
   })
   $stateProvider.state('player',{
       url: '/player',
-      templateUrl:'templates/player.html'
+      templateUrl:'templates/player.html',
+      controller: 'AudioController'
   })
   $stateProvider.state('sons',{
       url: '/sons',
@@ -38,7 +40,7 @@ angular.module('starter', ['ionic','ngCordova'])
   $urlRouterProvider.otherwise('/home')
 })
 
-.controller('CaptureCtrl', function($scope, $ionicActionSheet, $ionicLoading, $ionicPlatform, $cordovaCamera) {
+.controller('CaptureCtrl', function($scope, $ionicActionSheet, $ionicLoading, $ionicPlatform, $cordovaCamera, $state) {
 
   $ionicPlatform.ready(function() {
 
@@ -103,12 +105,15 @@ angular.module('starter', ['ionic','ngCordova'])
   // $scope.showActionSheet();
 
   $scope.testOcrad = function(){
+    var text;
     self.showLoading();
-    OCRAD(document.getElementById("pic"), function(text){
+    OCRAD(document.getElementById("pic"), function(value){
       self.hideLoading();
-      console.log(text);
-      alert(text);
+      text = value;
     });
+    alert(text);
+    // var mireille = 2;
+    $state.go('player', {mireille: 2});
     // var AYLIENTextAPI = require('aylien_textapi');
     // var textapi = new AYLIENTextAPI({
     //   application_id: "be2e9ebf",
@@ -121,14 +126,15 @@ angular.module('starter', ['ionic','ngCordova'])
     //     alert(response);
     //   }
     // });
-  } ;
-
+  };
 })
 
 
 // PLAYER
-.controller('AudioController', function($scope,$ionicPlatform, $ionicActionSheet, $ionicLoading) {
-  var pause = true;
+.controller('AudioController', function($scope, $ionicPlatform, $ionicActionSheet, $ionicLoading, $state, $stateParams) {
+  var texte = $stateParams.mireille;
+  // alert(texte);
+  var pause = false;
   var loop  = false;
 
   var audio_player            = document.querySelector('.audio_player');
@@ -139,8 +145,18 @@ angular.module('starter', ['ionic','ngCordova'])
   var audio_button_random     = document.querySelector('.audio_button_random');
   var audio_seek_bar          = document.querySelector('.audio_seek_bar');
   var audio_progress_bar      = document.querySelector('.audio_progress_bar');
+  var audio_info_title        = document.querySelector('.audio_info_title_h1');
+  var audio_info_author       = document.querySelector('.audio_info_author_h1');
 
-  audio_player.src = 'audio/colere.mp3';
+  var songs = {"songs":[
+    {"title":"Colère 1", "autor":"", "src":"audio/colere.mp3"},
+    {"title":"Colère 2", "autor":"", "src":"audio/colere2.mp3"},
+  ]};
+  console.log(songs);
+  audio_player.src = songs.songs[0].src;
+  audio_info_title.innerText = songs.songs[0].title;
+  audio_info_author.innerText = songs.songs[0].autor;
+  audio_player.play();
 
   // PLAY / PAUSE
     var if_playing = function(){
@@ -216,10 +232,39 @@ angular.module('starter', ['ionic','ngCordova'])
     	if_looping();
     });
 
-    // RELOAD
+    // RELOAD / PRECEDENT
     audio_button_previous.addEventListener('click', function(){
-      audio_player.currentTime = 0;
-    	pause = true;
-    	if_playing();
+      precedent();
     });
+    console.log(songs.songs.length);
+    var precedent = function() {
+      pause = true;
+      audio_player.currentTime = 0;
+      if (audio_player.currentTime <=1) {
+        for (var i = songs.songs.length - 1; i <= songs.songs.length; i--) {
+          audio_player.src = songs.songs[i].src;
+          audio_info_title.innerText = songs.songs[i].title;
+          audio_info_author.innerText = songs.songs[i].autor;
+        }
+      }
+      if_playing();
+    }
+
+    // NEXT
+    var next = function() {
+      pause = true;
+      console.log('click');
+      for (var i = 0; i < songs.songs.length; i++) {
+        audio_player.src = songs.songs[i].src;
+        audio_info_title.innerText = songs.songs[i].title;
+        audio_info_author.innerText = songs.songs[i].autor;
+      }
+      if_playing();
+    }
+    audio_button_next.addEventListener('click', function(){
+      next();
+    });
+
+    if (audio_player.currentTime == audio_player.duration) {
+    }
 });
